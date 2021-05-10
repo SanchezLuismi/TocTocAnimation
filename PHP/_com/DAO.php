@@ -106,7 +106,7 @@ class DAO
         $datos = [];
 
         $rs = self::ejecutarConsulta(
-            "SELECT * FROM inchable ORDER BY nombre",
+            "SELECT * FROM hinchable ORDER BY nombre",
             []
         );
 
@@ -167,6 +167,17 @@ class DAO
         $rs = self::ejecutarConsulta(
             "SELECT * FROM usuario WHERE id=?",
             [$id]
+        );
+
+        if ($rs) return self::usuarioCrearDesdeRs($rs[0]);
+        else return null;
+    }
+
+    public static function usuarioObtenerPorIdentificadoryPassword(string $identificador, string $password): ?Usuario
+    {
+        $rs = self::ejecutarConsulta(
+            "SELECT * FROM usuario WHERE identificador=? and password=?",
+            [$identificador,$password]
         );
 
         if ($rs) return self::usuarioCrearDesdeRs($rs[0]);
