@@ -9,12 +9,12 @@ trait Identificable
 {
     protected $id;
 
-    public function getId(): string
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function setId(string $id)
+    public function setId(int $id)
     {
         $this->id = $id;
     }
@@ -24,11 +24,11 @@ class Usuario extends Dato implements JsonSerializable
 {
     use Identificable;
 
-    private string $identificador;
-    private string $password;
-    private string $nombre;
-    private string $apellidos;
-    private string $telefono;
+    private $identificador;
+    private $password;
+    private $nombre;
+    private $apellidos;
+    private $telefono;
 
     public function __construct(int $id, string $identificador, string $password, string $nombre, string $apellidos, string $telefono)
     {
@@ -109,14 +109,14 @@ class Reserva extends Dato implements JsonSerializable
 
     use Identificable;
 
-    private int $idUsuario;
-    private int $idHinchable;
-    private Date $fecha;
-    private string $direcion;
-    private string $ciudad;
-    private string $codPostal;
+    private $idUsuario;
+    private $idHinchable;
+    private $fecha;
+    private $direcion;
+    private $ciudad;
+    private $codPostal;
 
-    public function __construct(idnt $id, int $idUsuario, int $idHinchable, Date $fecha, string $direcion, string $ciudad, string $codPostal)
+    public function __construct(int $id, int $idUsuario, int $idHinchable, Date $fecha, string $direcion, string $ciudad, string $codPostal)
     {
         $this->setId($id);
         $this->setidUsuario($idUsuario);
@@ -207,10 +207,10 @@ class Hinchable extends Dato implements JsonSerializable
 
     use Identificable;
 
-    private string $nombre;
-    private string $dimensiones;
-    private string $tipo;
-    private string $descripcion;
+    private $nombre;
+    private $dimensiones;
+    private $tipo;
+    private $descripcion;
 
     public function __construct(int $id, string $nombre, string $dimensiones, string $tipo, string $descripcion)
     {
@@ -264,13 +264,11 @@ class Hinchable extends Dato implements JsonSerializable
     public function jsonSerialize()
     {
         return [
+            "id" => $this->getId(),
             "nombre" => $this->nombre,
-            "apellido" => $this->apellido,
-            "telefono" => $this->telefono,
-            "estrella" => $this->estrella,
-            "categoriaId" => $this->categoriaId,
-            "id" => $this->id,
-
+            "dimensiones" => $this->dimensiones,
+            "tipo" => $this->tipo,
+            "descripcion" => $this->descripcion
         ];
     }
 

@@ -2,7 +2,7 @@ window.onload = inicio;
 
 function inicio(){
     var tablaReservas = document.getElementById("tablaReservas");
-    document.getElementById("btnBuscarFiltros").addEventListener('click',buscarReserva);
+    document.getElementById("btnFiltros").addEventListener('click',buscarReserva);
 
 }
 

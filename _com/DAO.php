@@ -85,12 +85,12 @@ class DAO
 
     /* HINCHABLE */
 
-    private static function hinchableCrearDesdeRs(array $fila): Categoria
+    private static function hinchableCrearDesdeRs(array $fila): Hinchable
     {
-        return new Hinchable($fila["id"], $fila["nombre"]);
+        return new Hinchable($fila["id"], $fila["nombre"],$fila["dimensiones"],$fila["tipo"],$fila["descripcion"]);
     }
 
-    public static function hinchableObtenerPorId(int $id): ?Categoria
+    public static function hinchableObtenerPorId(int $id): ?Hinchable
     {
         $rs = self::ejecutarConsulta(
             "SELECT * FROM hinchable WHERE id=?",
@@ -111,14 +111,14 @@ class DAO
         );
 
         foreach ($rs as $fila) {
-            $categoria = self::hinchableCrearDesdeRs($fila);
-            array_push($datos, $categoria);
+            $hinchable = self::hinchableCrearDesdeRs($fila);
+            array_push($datos, $hinchable);
         }
 
         return $datos;
     }
 
-    public static function hinchableCrear(string $nombre): ?Categoria
+    public static function hinchableCrear(string $nombre): ?Hinchable
     {
         $idAutogenerado = self::ejecutarInsert(
             "INSERT INTO hinchable (nombre) VALUES (?)",
