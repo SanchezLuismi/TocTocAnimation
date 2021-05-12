@@ -26,15 +26,20 @@ class Usuario extends Dato implements JsonSerializable
 
     private $identificador;
     private $password;
+    private $tipoUsuario;
     private $nombre;
     private $apellidos;
     private $telefono;
+    private $codigoCookie;
+    private $caducidadCookie;
 
-    public function __construct(int $id, string $identificador, string $password, string $nombre, string $apellidos, string $telefono)
+
+    public function __construct(int $id, string $identificador, string $password,int $tipoUsuario, string $nombre, string $apellidos, string $telefono)
     {
         $this->setId($id);
         $this->setIdentificador($identificador);
         $this->setPassword($password);
+        $this->setTipoUsuario($tipoUsuario);
         $this->setNombre($nombre);
         $this->setApellidos($apellidos);
         $this->setTelefono($telefono);
@@ -89,6 +94,36 @@ class Usuario extends Dato implements JsonSerializable
     {
         $this->telefono = $telefono;
     }
+
+    public function getTipoUsuario()
+    {
+        return $this->tipoUsuario;
+    }
+
+    public function setTipoUsuario($tipoUsuario): void
+    {
+        $this->tipoUsuario = $tipoUsuario;
+    }
+
+    public function getCodigoCookie(): ?string
+    {
+        return $this->codigoCookie;
+    }
+
+    public function setCodigoCookie(?string $codigoCookie): void
+    {
+        $this->codigoCookie = $codigoCookie;
+    }
+    public function getCaducidadCookie(): ?string
+    {
+        return $this->caducidadCookie;
+    }
+    public function setCaducidadCookie(?string $caducidadCookie): void
+    {
+        $this->caducidadCookie = $caducidadCookie;
+    }
+
+
 
     public function jsonSerialize()
     {

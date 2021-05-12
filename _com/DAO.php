@@ -82,12 +82,21 @@ class DAO
         else return $delete->rowCount();
     }
 
+    public function destruirSesionRamYCookie()
+    {
+        session_destroy();
+        setcookie('codigoCookie', "");
+        setcookie('identificador',"");
+        unset($_SESSION);
+    }
+
 
     /* HINCHABLE */
 
     private static function hinchableCrearDesdeRs(array $fila): Hinchable
     {
-        return new Hinchable($fila["id"], $fila["nombre"],$fila["dimensiones"],$fila["tipo"],$fila["descripcion"]);
+        print_r($fila);
+        return new Hinchable($fila["hId"], $fila["hNombre"],$fila["hDescripcion"],$fila["tNombre"],$fila["hDimensiones"]);
     }
 
     public static function hinchableObtenerPorId(int $id): ?Hinchable
@@ -109,6 +118,26 @@ class DAO
             "SELECT * FROM hinchable ORDER BY nombre",
             []
         );
+
+        foreach ($rs as $fila) {
+            $hinchable = self::hinchableCrearDesdeRs($fila);
+            array_push($datos, $hinchable);
+        }
+
+        return $datos;
+    }
+
+    public static function hinchableObtenerPorParametros(int $tipo, string $dimensiones): array
+    {
+        $datos = [];
+
+        $rs = self::ejecutarConsulta(
+            "SELECT h.id AS hId,h.nombre AS hNombre, h.dimensiones as hDimensiones,h.descripcion as hDescripcion,t.nombre AS tNombre
+                FROM hinchable AS h INNER JOIN tipo AS t ON h.tipo = t.id WHERE t.id=? and h.dimensiones=? ORDER BY hNombre",
+            [$tipo,$dimensiones]
+        );
+
+        print_r($rs);
 
         foreach ($rs as $fila) {
             $hinchable = self::hinchableCrearDesdeRs($fila);
@@ -155,11 +184,30 @@ class DAO
         return self::hinchableEliminarPorId($categoria->id);
     }
 
-    /*PERSONA*/
+    /*TIPOS*/
+
+    public static function tipoObtenerTodas(): array
+    {
+        $datos = [];
+
+        $rs = self::ejecutarConsulta(
+            "SELECT * FROM tipo ORDER BY nombre",
+            []
+        );
+
+        foreach ($rs as $fila) {
+            $tipo = self::hinchableCrearDesdeRs($tip);
+            array_push($datos, $hinchable);
+        }
+
+        return $datos;
+    }
+
+    /*USUARIO*/
     private static function usuarioCrearDesdeRs(array $fila): Usuario
     {
-        return new Usuario($fila["id"],$fila["identificador"],$fila["password"], $fila["nombre"],$fila["apellidos"],
-            $fila["telefono"],$fila["codigocookie"],$fila["tipousuario"]);
+        return new Usuario($fila["id"],$fila["identificador"],$fila["contrasenna"],$fila["tipoUsuario"], $fila["nombre"],$fila["apellidos"],
+            $fila["telefono"]);
     }
 
     public static function usuarioObtenerPorId(int $id): ?Usuario
@@ -173,11 +221,11 @@ class DAO
         else return null;
     }
 
-    public static function usuarioObtenerPorIdentificadoryPassword(string $identificador, string $password): ?Usuario
+    public static function usuarioObtenerPorIdentificadoryPassword(string $identificador, string $contrasenna): ?Usuario
     {
         $rs = self::ejecutarConsulta(
-            "SELECT * FROM usuario WHERE identificador=? and password=?",
-            [$identificador,$password]
+            "SELECT * FROM usuario WHERE identificador=? and contrasenna=?",
+            [$identificador,$contrasenna]
         );
 
         if ($rs) return self::usuarioCrearDesdeRs($rs[0]);
