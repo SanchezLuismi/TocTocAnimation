@@ -38,23 +38,32 @@ function objetoAParametrosParaRequest(objeto) {
 
 function cargarTipos(){
 
-    var tipo = document.getElementById("tipo");
-
-
-
-
-    llamadaAjax("HinchablesObtenerTodas.php", objetoAParametrosParaRequest(filtros),
+    llamadaAjax("TiposObtenerTodos.php", objetoAParametrosParaRequest(filtros),
         function(xml) {
             // Se re-crean los datos por si han modificado/normalizado algún valor en el servidor.
-            var hinchables = JSON.parse(xml);
+            var tipos = JSON.parse(xml);
 
             // Se fuerza la ordenación, ya que este elemento podría no quedar ordenado si se pone al final.
-            cargaReserva(categoria);
+            cargarSelectTipos(tipos);
         },
         function(texto) {
             alert("Error Ajax al crear: " + texto);
         }
     );
+
+
+}
+
+function cargarSelectTipos(tipos){
+
+    var select = document.getElementById("tipo");
+
+    for(var i=0;i<tipos.length;i++){
+        var option = document.createElement("option");
+        option.text = tipos[i].nombre;
+        option.value = tipos[i].id;
+        select.add(option);
+    }
 
 
 }
@@ -65,13 +74,15 @@ function buscarReserva(){
     var fecha = document.getElementById("fecha").value;
     var hora = document.getElementById("hora").value;
     var tipo = document.getElementById("tipo").value;
-    var dimensiones = document.getElementById("dimensiones").value;
+    var dAnchura = document.getElementById("dAnchura").value;
+    var dAltura = document.getElementById("dAltura").value;
+    var dLargo = document.getElementById("dLargo").value;
 
     let filtros = {
         "fecha" :fecha,
         "hora" : hora,
         "tipo" : tipo,
-        "dimensiones" : dimensiones
+        "dimensiones" : dAnchura+"X"+dAltura+"X"+dLargo
     }
 
 

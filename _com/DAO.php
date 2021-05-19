@@ -133,7 +133,7 @@ class DAO
 
         $rs = self::ejecutarConsulta(
             "SELECT h.id AS hId,h.nombre AS hNombre, h.dimensiones as hDimensiones,h.descripcion as hDescripcion,t.nombre AS tNombre
-                FROM hinchable AS h INNER JOIN tipo AS t ON h.tipo = t.id WHERE t.id=? and h.dimensiones=? ORDER BY hNombre",
+                FROM hinchable AS h INNER JOIN tipo AS t ON h.tipo = t.id WHERE h.tipo=? and h.dimensiones=? ORDER BY hNombre",
             [$tipo,$dimensiones]
         );
 
@@ -196,8 +196,7 @@ class DAO
         );
 
         foreach ($rs as $fila) {
-            $tipo = self::hinchableCrearDesdeRs($tip);
-            array_push($datos, $hinchable);
+            array_push($datos,$fila );
         }
 
         return $datos;

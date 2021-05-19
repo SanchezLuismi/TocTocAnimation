@@ -246,14 +246,16 @@ class Hinchable extends Dato implements JsonSerializable
     private $dimensiones;
     private $tipo;
     private $descripcion;
+    private $precio;
 
-    public function __construct(int $id, string $nombre, string $dimensiones, string $tipo, string $descripcion)
+    public function __construct(int $id, string $nombre, string $dimensiones, string $tipo, string $descripcion,double $precio)
     {
         $this->setId($id);
         $this->setNombre($nombre);
         $this->setDimensiones($dimensiones);
         $this->setTipo($tipo);
         $this->setDescripcion($descripcion);
+        $this->setPrecio($precio);
     }
 
     public function getNombre(): string
@@ -296,14 +298,27 @@ class Hinchable extends Dato implements JsonSerializable
         $this->descripcion = $descripcion;
     }
 
+    public function getPrecio(): float
+    {
+        return $this->precio;
+    }
+
+    public function setPrecio(float $precio): void
+    {
+        $this->precio = $precio;
+    }
+
+
+
     public function jsonSerialize()
     {
         return [
             "id" => $this->getId(),
-            "nombre" => $this->nombre,
-            "dimensiones" => $this->dimensiones,
-            "tipo" => $this->tipo,
-            "descripcion" => $this->descripcion
+            "nombre" => $this->getNombre(),
+            "dimensiones" => $this->getDimensiones(),
+            "tipo" => $this->getTipo(),
+            "descripcion" => $this->getDescripcion(),
+            "precio" => $this->getPrecio()
         ];
     }
 

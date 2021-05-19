@@ -20,8 +20,18 @@
     <p>
         <label>Fecha: </label><input type="date" id='fecha'/>
         <label>Hora: </label><input type="text" id="hora">
-        <label>Tipo: </label><select name="tipo"></select>
-        <label>Dimensiones: </label><input type='text' id='dimensiones'/> <br />
+        <label>Tipo: </label><select name="tipo" id="tipo">
+            <option value=""></option>
+        </select>
+        <br />
+        <div>
+            <label>Dimensiones: </label><br />
+            <label>Anchura:</label><input type='number' id='dAnchura'/>
+            <label>Altura: </label><input type='number' id='dAltura'/>
+            <label>Largo: </label><input type='number' id='dLargo'/>
+        </div>
+        <br />
+        <label>Precio: </label><input type='number' id='precio'/> <br />
         <button id='btnFiltros'>Buscar</button>
     </p>
 </div>
