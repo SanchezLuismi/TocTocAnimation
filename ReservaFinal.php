@@ -1,15 +1,11 @@
 <?php
-    require_once "_com/Varios.php";
 
-    if (haySesionRamIniciada()) redireccionar("index.php");
-    $reserva = isset($_REQUEST["Reserva"]);
-    $datosErroneos = isset($_REQUEST["datosErroneos"]);
-    if($reserva){
-       $form = "SesionInicioComprobar.php?Reserva";
-    }else{
-        $form = "SesionInicioComprobar.php";
-    }
+require_once "_com/Varios.php";
 
+if(!haySesionRamIniciada()) redireccionar("SesionInicioFormulario.php?Reserva");
+$datosErroneos = isset($_REQUEST["datosErroneos"]);
+$idHinchable = $_REQUEST["id"];
+$telefono = $_SESSION["telefono"];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -30,6 +26,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css" media="screen">
     <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <script src="js/ConexionPHP.js"></script>
+    <script src="js/ScriptsReservaFinal.js"></script>
 </head>
 <body class="main-layout">
 <header>
@@ -64,7 +62,7 @@
                                 <li class="nav-item">
                                     <a class="nav-link" href="Carrusel.php">Carrusel de imagenes</a>
                                 </li>
-                                <li class="nav-item active">
+                                <li class="nav-item">
                                     <?php pintarInfoSesion(); ?>
                                 </li>
                                 <li class="nav-item">
@@ -78,42 +76,62 @@
         </div>
     </div>
 </header>
-
-
-
-<body>
-
 <div id="" class="hosting">
     <div class="container">
         <div class="row">
             <div class="col-md-12">
                 <div class="titlepage">
-                    <h2>Iniciar sesión</h2>
+                    <h2>Reserva Final</h2>
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col-md-12">
                 <div class="web_hosting">
-                    <form action="<?=$form?>" method="post">
-                        <label for='identificador'>Identificador</label>
-                        <input type='text' name='identificador' required><br><br>
-
-                        <label for='contrasenna'>Contraseña</label>
-                        <input type='password' name='contrasenna' id='contrasenna' required><br><br>
-
-                        <label for='recordar'>Recuérdame aunque cierre el navegador</label>
-                        <input type='checkbox' name='recordar' id='recordar'><br><br>
-
-                        <input type='submit' value='Iniciar Sesión'>
+                    <?php if ($datosErroneos) { ?>
+                        <p style='color: red;'>No se ha podido reservar por algun fallo. Inténtelo de nuevo.</p>
+                    <?php } ?>
+                    <table id="tablaHinchable" class="tablaReserva" border="1">
+                        <tr>
+                            <th>Imagen</th>
+                            <th>Nombre</th>
+                            <th>Dimensiones</th>
+                            <th>Tipo</th>
+                            <th>Descripción</th>
+                            <th>Precio (4 horas con monitor)</th>
+                            <th>Precio (día completo sin monitor)</th>
+                        </tr>
+                    </table>
+                    <form action="ReservaCrear.php" method="post">
+                        <h4>Opciones de la reserva</h4>
+                        <label>Opciones</label><br/>
+                        <input type="Radio" name="opciones" id ="monitor" value="monitor" onchange="cargarPrecio()"> 4 Horas con monitor
+                        <input type="Radio" name="opciones" id="completo" value="completo" onchange="cargarPrecio()"> Día completo sin monitor
+                        <br />
+                        Precio: <input type="text" id="precio" name ="precio" readonly required><br />
+                        Fecha: <input type="date" id='fecha' name="fecha" required/>
+                        Hora inicio: <input type="time" name="horaInicial" id='horaInicial' onchange="calcularHora()" required/>
+                        Hora final: <input type="time" name="horaFinal" id='horaFinal'/>
+                        <br />
+                        Telefono : <input type="text" id="telefono" name ="telefono" value="<?=$telefono?>" readonly><br />
+                        Dirección: <input type="text" id="direccion" name ="direccion" required><br />
+                        Localidad: <input type="text" id="localidad" name ="localidad" required><br />
+                        Código Postal : <input type="text" id="codPostal" name ="codPostal" required><br />
+                        <input type="hidden" name="idHinchable" id="idHinchable" value="<?=$idHinchable?>">
+                        <input type="hidden" name="monitor" id="control">
+                        <input type='submit' value='Reservar'>
                     </form>
-
-                    <p>O, si no tienes una cuenta aún, <a href='UsuarioNuevoCrear.php'>créala aquí</a>.</p>
                 </div>
             </div>
         </div>
     </div>
 </div>
-</body>
+<div class="container filtro">
 
+
+
+</div>
+
+
+</body>
 </html>

@@ -34,12 +34,11 @@ class Usuario extends Dato implements JsonSerializable
     private $caducidadCookie;
 
 
-    public function __construct(int $id, string $identificador, string $password,int $tipoUsuario, string $nombre, string $apellidos, string $telefono)
+    public function __construct(int $id, string $identificador, string $password, string $nombre, string $apellidos, string $telefono)
     {
         $this->setId($id);
         $this->setIdentificador($identificador);
         $this->setPassword($password);
-        $this->setTipoUsuario($tipoUsuario);
         $this->setNombre($nombre);
         $this->setApellidos($apellidos);
         $this->setTelefono($telefono);
@@ -128,12 +127,12 @@ class Usuario extends Dato implements JsonSerializable
     public function jsonSerialize()
     {
         return [
-            "nombre" => $this->nombre,
-            "apellido" => $this->apellido,
-            "telefono" => $this->telefono,
-            "estrella" => $this->estrella,
-            "categoriaId" => $this->categoriaId,
-            "id" => $this->id,
+            "nombre" => $this->getNombre(),
+            "apellido" => $this->getApellidos(),
+            "telefono" => $this->getTelefono(),
+            "identificador" => $this->getIdentificador(),
+            "contrasenna" => $this->getPassword(),
+            "id" => $this->getId(),
 
         ];
     }
@@ -147,19 +146,27 @@ class Reserva extends Dato implements JsonSerializable
     private $idUsuario;
     private $idHinchable;
     private $fecha;
-    private $direcion;
+    private $direccion;
     private $ciudad;
     private $codPostal;
+    private $precio;
+    private $monitor;
+    private $horaInicial;
+    private $horaFinal;
 
-    public function __construct(int $id, int $idUsuario, int $idHinchable, Date $fecha, string $direcion, string $ciudad, string $codPostal)
+    public function __construct(int $id, int $idUsuario, string $nombreHinchable, string $fecha, string $direccion, string $ciudad, string $codPostal,float $precio,int $monitor,string $horaInicial,string $horaFinal)
     {
         $this->setId($id);
         $this->setidUsuario($idUsuario);
-        $this->setIdHinchable($idHinchable);
+        $this->setNombreHinchable($nombreHinchable);
         $this->setFecha($fecha);
-        $this->setDirecion($direcion);
+        $this->setDireccion($direccion);
         $this->setCiudad($ciudad);
         $this->setCodPostal($codPostal);
+        $this->setPrecio($precio);
+        $this->setMonitor($monitor);
+        $this->setHoraInicial($horaInicial);
+        $this->setHoraFinal($horaFinal);
     }
 
     public function getIdUsuario(): int
@@ -172,34 +179,34 @@ class Reserva extends Dato implements JsonSerializable
         $this->idUsuario = $idUsuario;
     }
 
-    public function getIdHinchable(): int
+    public function getNombreHinchable(): string
     {
-        return $this->idHinchable;
+        return $this->nombreHinchable;
     }
 
-    public function setIdHinchable(int $idHinchable): void
+    public function setNombreHinchable(string $nombreHinchable): void
     {
-        $this->idHinchable = $idHinchable;
+        $this->nombreHinchable = $nombreHinchable;
     }
 
-    public function getFecha(): Date
+    public function getFecha(): string
     {
         return $this->fecha;
     }
 
-    public function setFecha(Date $fecha): void
+    public function setFecha(string $fecha): void
     {
         $this->fecha = $fecha;
     }
 
-    public function getDirecion(): string
+    public function getDireccion(): string
     {
-        return $this->direcion;
+        return $this->direccion;
     }
 
-    public function setDirecion(string $direcion): void
+    public function setDireccion(string $direccion): void
     {
-        $this->direcion = $direcion;
+        $this->direccion = $direccion;
     }
 
     public function getCiudad(): string
@@ -222,16 +229,62 @@ class Reserva extends Dato implements JsonSerializable
         $this->codPostal = $codPostal;
     }
 
+    public function getPrecio(): float
+    {
+        return $this->precio;
+    }
+
+    public function setPrecio(float $precio): void
+    {
+        $this->precio = $precio;
+    }
+
+    public function getMonitor(): int
+    {
+        return $this->monitor;
+    }
+
+    public function setMonitor(int $monitor): void
+    {
+        $this->monitor = $monitor;
+    }
+
+    public function getHoraInicial(): string
+    {
+        return $this->horaInicial;
+    }
+
+    public function setHoraInicial(string $horaInicial): void
+    {
+        $this->horaInicial = $horaInicial;
+    }
+
+    public function getHoraFinal(): string
+    {
+        return $this->horaFinal;
+    }
+
+    public function setHoraFinal(string $horaFinal): void
+    {
+        $this->horaFinal = $horaFinal;
+    }
+
+
+
     public function jsonSerialize()
     {
         return [
-            "nombre" => $this->nombre,
-            "apellido" => $this->apellido,
-            "telefono" => $this->telefono,
-            "estrella" => $this->estrella,
-            "categoriaId" => $this->categoriaId,
-            "id" => $this->id,
-
+            "id" => $this->getId(),
+            "idUsuario" => $this->getIdUsuario(),
+            "NombreHinchable" => $this->getNombreHinchable(),
+            "fecha" => $this->getFecha(),
+            "direccion" => $this->getDireccion(),
+            "ciudad" => $this->getCiudad(),
+            "codPostal" => $this->getCodPostal(),
+            "horaInicial" => $this->getHoraInicial(),
+            "horaFinal" => $this->getHoraFinal(),
+            "monitor" => $this->getMonitor(),
+            "precio" => $this->getPrecio()
         ];
     }
 
@@ -246,16 +299,18 @@ class Hinchable extends Dato implements JsonSerializable
     private $dimensiones;
     private $tipo;
     private $descripcion;
-    private $precio;
+    private $precio1;
+    private $precio2;
 
-    public function __construct(int $id, string $nombre, string $dimensiones, string $tipo, string $descripcion,double $precio)
+    public function __construct(int $id, string $nombre, string $dimensiones, string $tipo, string $descripcion,float $precio1,float $precio2)
     {
         $this->setId($id);
         $this->setNombre($nombre);
         $this->setDimensiones($dimensiones);
         $this->setTipo($tipo);
         $this->setDescripcion($descripcion);
-        $this->setPrecio($precio);
+        $this->setPrecio1($precio1);
+        $this->setPrecio2($precio2);
     }
 
     public function getNombre(): string
@@ -298,14 +353,24 @@ class Hinchable extends Dato implements JsonSerializable
         $this->descripcion = $descripcion;
     }
 
-    public function getPrecio(): float
+    public function getPrecio1(): float
     {
-        return $this->precio;
+        return $this->precio1;
     }
 
-    public function setPrecio(float $precio): void
+    public function setPrecio1(float $precio1): void
     {
-        $this->precio = $precio;
+        $this->precio1 = $precio1;
+    }
+
+    public function getPrecio2(): float
+    {
+        return $this->precio2;
+    }
+
+    public function setPrecio2(float $precio2): void
+    {
+        $this->precio2 = $precio2;
     }
 
 
@@ -318,7 +383,8 @@ class Hinchable extends Dato implements JsonSerializable
             "dimensiones" => $this->getDimensiones(),
             "tipo" => $this->getTipo(),
             "descripcion" => $this->getDescripcion(),
-            "precio" => $this->getPrecio()
+            "precio1" => $this->getPrecio1(),
+            "precio2" => $this->getPrecio2()
         ];
     }
 

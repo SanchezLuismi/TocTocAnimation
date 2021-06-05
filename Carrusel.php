@@ -1,14 +1,6 @@
 <?php
-    require_once "_com/Varios.php";
 
-    if (haySesionRamIniciada()) redireccionar("index.php");
-    $reserva = isset($_REQUEST["Reserva"]);
-    $datosErroneos = isset($_REQUEST["datosErroneos"]);
-    if($reserva){
-       $form = "SesionInicioComprobar.php?Reserva";
-    }else{
-        $form = "SesionInicioComprobar.php";
-    }
+require_once "_com/Varios.php";
 
 ?>
 <!DOCTYPE html>
@@ -61,10 +53,10 @@
                                 <li class="nav-item">
                                     <a class="nav-link" href="Contacto.php"> Contacto</a>
                                 </li>
-                                <li class="nav-item">
+                                <li class="nav-item active">
                                     <a class="nav-link" href="Carrusel.php">Carrusel de imagenes</a>
                                 </li>
-                                <li class="nav-item active">
+                                <li class="nav-item">
                                     <?php pintarInfoSesion(); ?>
                                 </li>
                                 <li class="nav-item">
@@ -78,42 +70,42 @@
         </div>
     </div>
 </header>
-
-
+<br />
 
 <body>
-
-<div id="" class="hosting">
+<div class="container filtro">
+    <div id="captioned-gallery">
+        <figure class="slider">
+            <figure>
+                <img src="img/img1.jpeg" alt>
+            </figure>
+            <figure>
+                <img src="img/hinch23.jpg" alt>
+            </figure>
+            <figure>
+                <img src="img/img3.jpeg" alt>
+            </figure>
+            <figure>
+                <img src="img/hinch21.jpg" alt>
+            </figure>
+            <figure>
+                <img src="img/img5.jpeg" alt>
+            </figure>
+        </figure>
+    </div>
+</div>
+<div class="footer">
     <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="titlepage">
-                    <h2>Iniciar sesión</h2>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="web_hosting">
-                    <form action="<?=$form?>" method="post">
-                        <label for='identificador'>Identificador</label>
-                        <input type='text' name='identificador' required><br><br>
-
-                        <label for='contrasenna'>Contraseña</label>
-                        <input type='password' name='contrasenna' id='contrasenna' required><br><br>
-
-                        <label for='recordar'>Recuérdame aunque cierre el navegador</label>
-                        <input type='checkbox' name='recordar' id='recordar'><br><br>
-
-                        <input type='submit' value='Iniciar Sesión'>
-                    </form>
-
-                    <p>O, si no tienes una cuenta aún, <a href='UsuarioNuevoCrear.php'>créala aquí</a>.</p>
+        <div class="copyright">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <p>Copyright © 2021 Toc Toc Animación</p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-</body>
 
+</body>
 </html>

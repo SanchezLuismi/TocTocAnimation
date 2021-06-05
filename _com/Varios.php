@@ -1,6 +1,6 @@
 <?php
 
-require_once "Clases.php";
+require_once "_com/Clases.php";
 session_start();
 
 
@@ -56,7 +56,7 @@ function generarCadenaAleatoria(int $longitud): string
 function intentarCanjearSesionCookie(): bool
 {
     if (isset($_COOKIE["identificador"]) && isset($_COOKIE["codigoCookie"])) {
-        $arrayUsuario = obtenerUsuarioPorCodigoCookie($_COOKIE["identificador"], $_COOKIE["codigoCookie"]);
+        $arrayUsuario = DAO::obtenerUsuarioPorCodigoCookie($_COOKIE["identificador"], $_COOKIE["codigoCookie"]);
 
         if ($arrayUsuario) {
             establecerSesionRam($arrayUsuario);
@@ -74,11 +74,18 @@ function intentarCanjearSesionCookie(): bool
 
 function pintarInfoSesion() {
     if (haySesionRamIniciada()) {
-        echo "<span>Sesión iniciada por <a href='UsuarioPerfilVer.php'>$_SESSION[identificador]</a> ($_SESSION[nombre] $_SESSION[apellidos]) <a href='SesionCerrar.php'>Cerrar sesión</a></span>";
+        echo "<span><a class='nav-link' href='UsuarioPerfilVer.php'>Mi perfil</a></span>";
     } else {
-        echo "<a href='SesionInicioFormulario.php'>Iniciar sesión</a>";
+        echo "<a class='nav-link' href='SesionInicioFormulario.php'>Iniciar sesión</a>";
     }
 }
+
+function pintarCerrarSesion() {
+    if (haySesionRamIniciada()) {
+        echo "<span><a class='nav-link'href='SesionCerrar.php'>Cerrar sesión</a></span>";
+    }
+}
+
 
 function establecerSesionCookie(array $arrayUsuario)
 {

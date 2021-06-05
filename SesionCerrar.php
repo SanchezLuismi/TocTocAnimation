@@ -5,6 +5,6 @@
 
     DAO::destruirSesionRamYCookie();
 
-    redireccionar("Reservas.php");
+    redireccionar("index.php");
 
 ?>

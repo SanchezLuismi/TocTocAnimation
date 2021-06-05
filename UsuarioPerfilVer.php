@@ -1,14 +1,12 @@
 <?php
-    require_once "_com/Varios.php";
 
-    if (haySesionRamIniciada()) redireccionar("index.php");
-    $reserva = isset($_REQUEST["Reserva"]);
-    $datosErroneos = isset($_REQUEST["datosErroneos"]);
-    if($reserva){
-       $form = "SesionInicioComprobar.php?Reserva";
-    }else{
-        $form = "SesionInicioComprobar.php";
-    }
+require_once "_com/Varios.php";
+if (!haySesionRamIniciada()) redireccionar("index.php");
+$id=$_SESSION["id"];
+$nombre=$_SESSION["nombre"];
+$apellidos=$_SESSION["apellidos"];
+$identificador=$_SESSION["identificador"];
+$telefono=$_SESSION["telefono"] ;
 
 ?>
 <!DOCTYPE html>
@@ -30,6 +28,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css" media="screen">
     <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <script src="js/ScriptsPerfil.js"></script>
+    <script src="js/ConexionPHP.js"></script>
 </head>
 <body class="main-layout">
 <header>
@@ -64,7 +64,7 @@
                                 <li class="nav-item">
                                     <a class="nav-link" href="Carrusel.php">Carrusel de imagenes</a>
                                 </li>
-                                <li class="nav-item active">
+                                <li class="nav-item">
                                     <?php pintarInfoSesion(); ?>
                                 </li>
                                 <li class="nav-item">
@@ -78,42 +78,54 @@
         </div>
     </div>
 </header>
-
-
-
-<body>
-
 <div id="" class="hosting">
     <div class="container">
         <div class="row">
             <div class="col-md-12">
                 <div class="titlepage">
-                    <h2>Iniciar sesión</h2>
+                    <h2>Datos del usuario</h2>
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col-md-12">
                 <div class="web_hosting">
-                    <form action="<?=$form?>" method="post">
-                        <label for='identificador'>Identificador</label>
-                        <input type='text' name='identificador' required><br><br>
-
-                        <label for='contrasenna'>Contraseña</label>
-                        <input type='password' name='contrasenna' id='contrasenna' required><br><br>
-
-                        <label for='recordar'>Recuérdame aunque cierre el navegador</label>
-                        <input type='checkbox' name='recordar' id='recordar'><br><br>
-
-                        <input type='submit' value='Iniciar Sesión'>
-                    </form>
-
-                    <p>O, si no tienes una cuenta aún, <a href='UsuarioNuevoCrear.php'>créala aquí</a>.</p>
+                    <input type="hidden" id="usuId" value="<?= $id ?>"></h4>
+                    <h4>Nombre: <input type="text" id="usuNombre" value="<?= $nombre ?>" readonly> </h4>
+                    <h4>Apellidos: <input type="text" id="usuApellidos" value="<?= $apellidos ?>"readonly> </h4>
+                    <h4>Identificador: <input type="text" id="usuIdentificador" value="<?= $identificador ?>"readonly></h4>
+                    <h4>Teléfono: <input type="text" id="usuTelefono" value="<?= $telefono ?>"readonly></h4><br />
+                    <button id="cambioDatos">Editar mis datos</button><br />
+                    <button id="guardarDatos" class="divReserva">Guardar datos</button><br /> <br />
+                    <button id="mostarCambioPass">Cambiar Contraseña</button><br />
+                    <div id="mostrarPass" class="divReserva">
+                        <h4>Contraseña:  <input type="text" id="usuPassword"></h4><br />
+                        <button id="guardarPass">Guardar Contraseña</button>
+                    </div>
+                    <h6><button id="mostarReservas">Mostrar mis Reservas</button></h6>
+                    <div id="reservas" class="divReserva">
+                        <table id="tablaReservas" class="tablaReserva" border="1">
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Fecha</th>
+                                <th>Direccion</th>
+                                <th>Ciudad</th>
+                                <th>Hora inicio</th>
+                                <th>Hora final</th>
+                                <th>Precio</th>
+                                <th></th>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-</body>
+<div class="container filtro">
 
+</div>
+
+
+</body>
 </html>

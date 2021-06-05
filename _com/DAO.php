@@ -95,14 +95,21 @@ class DAO
 
     private static function hinchableCrearDesdeRs(array $fila): Hinchable
     {
-        print_r($fila);
-        return new Hinchable($fila["hId"], $fila["hNombre"],$fila["hDescripcion"],$fila["tNombre"],$fila["hDimensiones"]);
+        //print_r($fila);
+
+        if(!$fila["hId"]){
+            return new Hinchable($fila["id"], $fila["nombre"],$fila["dimensiones"],$fila["tipo"],$fila["descripcion"],$fila["precio1"],$fila["precio2"]);
+        }else{
+            return new Hinchable($fila["hId"], $fila["hNombre"],$fila["hDimensiones"],$fila["tNombre"],$fila["hDescripcion"],$fila["hPrecio1"],$fila["hPrecio2"]);
+        }
+
     }
 
     public static function hinchableObtenerPorId(int $id): ?Hinchable
     {
         $rs = self::ejecutarConsulta(
-            "SELECT * FROM hinchable WHERE id=?",
+            "SELECT h.id AS hId,h.nombre AS hNombre, h.dimensiones as hDimensiones,h.descripcion as hDescripcion,h.precio1 as hPrecio1,h.precio2 as hPrecio2,t.nombre AS tNombre 
+            FROM hinchable AS h INNER JOIN tipo AS t ON h.tipo = t.id WHERE h.id=?",
             [$id]
         );
 
@@ -115,7 +122,8 @@ class DAO
         $datos = [];
 
         $rs = self::ejecutarConsulta(
-            "SELECT * FROM hinchable ORDER BY nombre",
+            "SELECT h.id AS hId,h.nombre AS hNombre, h.dimensiones as hDimensiones,h.descripcion as hDescripcion,h.precio1 as hPrecio1,h.precio2 as hPrecio2,t.nombre AS tNombre 
+            FROM hinchable AS h INNER JOIN tipo AS t ON h.tipo = t.id ORDER BY h.nombre",
             []
         );
 
@@ -127,17 +135,15 @@ class DAO
         return $datos;
     }
 
-    public static function hinchableObtenerPorParametros(int $tipo, string $dimensiones): array
+    public static function hinchableObtenerPorParametros(string $tipo,string $dimensiones,string $precioMenor, string $precioMayor): array
     {
         $datos = [];
 
         $rs = self::ejecutarConsulta(
-            "SELECT h.id AS hId,h.nombre AS hNombre, h.dimensiones as hDimensiones,h.descripcion as hDescripcion,t.nombre AS tNombre
-                FROM hinchable AS h INNER JOIN tipo AS t ON h.tipo = t.id WHERE h.tipo=? and h.dimensiones=? ORDER BY hNombre",
-            [$tipo,$dimensiones]
+            "SELECT h.id AS hId,h.nombre AS hNombre, h.dimensiones as hDimensiones,h.descripcion as hDescripcion,h.precio1 as hPrecio1,h.precio2 as hPrecio2,t.nombre AS tNombre 
+            FROM hinchable AS h INNER JOIN tipo AS t ON h.tipo = t.id WHERE t.id = ? and h.dimensiones = ? and h.precio1 > ? and h.precio1 < ?ORDER BY hNombre",
+            [$tipo,$dimensiones,$precioMenor,$precioMayor]
         );
-
-        print_r($rs);
 
         foreach ($rs as $fila) {
             $hinchable = self::hinchableCrearDesdeRs($fila);
@@ -147,7 +153,75 @@ class DAO
         return $datos;
     }
 
-    public static function hinchableCrear(string $nombre): ?Hinchable
+    public static function hinchableObtenerPorTipo(string $tipo): array
+    {
+        $datos = [];
+
+        $rs = self::ejecutarConsulta(
+            "SELECT h.id AS hId,h.nombre AS hNombre, h.dimensiones as hDimensiones,h.descripcion as hDescripcion,h.precio1 as hPrecio1,h.precio2 as hPrecio2,t.nombre AS tNombre 
+            FROM hinchable AS h INNER JOIN tipo AS t ON h.tipo = t.id WHERE t.id = ? ORDER BY hNombre",
+            [$tipo]
+        );
+
+        foreach ($rs as $fila) {
+            $hinchable = self::hinchableCrearDesdeRs($fila);
+            array_push($datos, $hinchable);
+        }
+
+        return $datos;
+    }
+
+    public static function hinchableObtenerPorDimensiones(string $dimensiones): array
+    {
+        $datos = [];
+
+        $rs = self::ejecutarConsulta(
+            "SELECT h.id AS hId,h.nombre AS hNombre, h.dimensiones as hDimensiones,h.descripcion as hDescripcion,h.precio1 as hPrecio1,h.precio2 as hPrecio2,t.nombre AS tNombre 
+            FROM hinchable AS h INNER JOIN tipo AS t ON h.tipo = t.id WHERE h.dimensiones = ? ORDER BY hNombre",
+            [$dimensiones]
+        );
+
+        foreach ($rs as $fila) {
+            $hinchable = self::hinchableCrearDesdeRs($fila);
+            array_push($datos, $hinchable);
+        }
+
+        return $datos;
+    }
+
+    public static function hinchableObtenerPorPrecio(string $precioMenor,string $precioMayor): array
+    {
+        $datos = [];
+        if($precioMenor == null){
+            $rs = self::ejecutarConsulta(
+                "SELECT h.id AS hId,h.nombre AS hNombre, h.dimensiones as hDimensiones,h.descripcion as hDescripcion,h.precio1 as hPrecio1,h.precio2 as hPrecio2,t.nombre AS tNombre 
+            FROM hinchable AS h INNER JOIN tipo AS t ON h.tipo = t.id WHERE  h.precio1 < ? ORDER BY hNombre",
+                [$precioMayor]
+            );
+        }else if($precioMayor == null){
+            $rs = self::ejecutarConsulta(
+                "SELECT h.id AS hId,h.nombre AS hNombre, h.dimensiones as hDimensiones,h.descripcion as hDescripcion,h.precio1 as hPrecio1,h.precio2 as hPrecio2,t.nombre AS tNombre 
+            FROM hinchable AS h INNER JOIN tipo AS t ON h.tipo = t.id WHERE  h.precio1 > ? ORDER BY hNombre",
+                [$precioMenor]
+            );
+        }else{
+            $rs = self::ejecutarConsulta(
+                "SELECT h.id AS hId,h.nombre AS hNombre, h.dimensiones as hDimensiones,h.descripcion as hDescripcion,h.precio1 as hPrecio1,h.precio2 as hPrecio2,t.nombre AS tNombre 
+            FROM hinchable AS h INNER JOIN tipo AS t ON h.tipo = t.id WHERE  h.precio1 < ? and h.precio1 > ? ORDER BY hNombre",
+                [$precioMenor,$precioMayor]
+            );
+        }
+
+
+        foreach ($rs as $fila) {
+            $hinchable = self::hinchableCrearDesdeRs($fila);
+            array_push($datos, $hinchable);
+        }
+
+        return $datos;
+    }
+
+   /* public static function hinchableCrear(string $nombre): ?Hinchable
     {
         $idAutogenerado = self::ejecutarInsert(
             "INSERT INTO hinchable (nombre) VALUES (?)",
@@ -158,16 +232,16 @@ class DAO
         else return self::hinchableObtenerPorId($idAutogenerado);
     }
 
-    public static function hinchableActualizar(Hinchable $categoria): ?Hinchable
+    public static function hinchableActualizar(Hinchable $hinchable): ?Hinchable
     {
         $filasAfectadas = self::ejecutarUpdate(
             "UPDATE hinchable SET nombre=? WHERE id=?",
-            [$categoria->getNombre(), $categoria->getId()]
+            [$hinchable->getNombre(), $hinchable->getId()]
         );
 
         if ($filasAfectadas = null) return null;
-        else return $categoria;
-    }
+        else return $hinchable;
+    }*/
 
     public static function hinchableEliminarPorId(int $id): bool
     {
@@ -179,9 +253,9 @@ class DAO
         return ($filasAfectadas == 1);
     }
 
-    public static function hinchableEliminar(Hinchable $categoria): bool
+    public static function hinchableEliminar(Hinchable $hinchable): bool
     {
-        return self::hinchableEliminarPorId($categoria->id);
+        return self::hinchableEliminarPorId($hinchable->id);
     }
 
     /*TIPOS*/
@@ -205,8 +279,7 @@ class DAO
     /*USUARIO*/
     private static function usuarioCrearDesdeRs(array $fila): Usuario
     {
-        return new Usuario($fila["id"],$fila["identificador"],$fila["contrasenna"],$fila["tipoUsuario"], $fila["nombre"],$fila["apellidos"],
-            $fila["telefono"]);
+        return new Usuario($fila["id"],$fila["identificador"],$fila["contrasenna"], $fila["nombre"],$fila["apellidos"], $fila["telefono"]);
     }
 
     public static function usuarioObtenerPorId(int $id): ?Usuario
@@ -231,44 +304,37 @@ class DAO
         else return null;
     }
 
-   /*public static function usuarioObtenerTodas(): array
-    {
-        $datos = [];
-
-        $rs = self::ejecutarConsulta(
-            "SELECT * FROM usuario ORDER BY nombre",
-            []
-        );
-
-        foreach ($rs as $fila) {
-            $persona = self::usuarioCrearDesdeRs($fila);
-            array_push($datos, $persona);
-        }
-
-        return $datos;
-    }*/
-
     public static function usuarioCrear(string $identificador,string $password,string $nombre,string $apellidos, string $telefono): ?Usuario
     {
         $idAutogenerado = self::ejecutarInsert(
-            "INSERT INTO usuario (nombre) VALUES (?,?,?,?,?,?,?)",
-            [$identificador,$password,$nombre,$apellidos,$telefono]
+            "INSERT INTO usuario (identificador,contrasenna,codigoCookie,caducidadCodigoCookie,nombre,apellidos,telefono) VALUES (?,?,?,?,?,?,?)",
+            [$identificador,$password,null,null,$nombre,$apellidos,$telefono]
         );
 
         if ($idAutogenerado == null) return null;
         else return self::usuarioObtenerPorId($idAutogenerado);
     }
 
-    public static function usuarioActualizar(Usuario $persona): ?Usuario
+    public static function usuarioActualizar(string $nombre,string $apellidos,string $telefono,string $identificador,string $id): ?Usuario
     {
         $filasAfectadas = self::ejecutarUpdate(
-            "UPDATE usuario SET identificador=?,password=?,nombre=?,apellidos=?,telefono=?,estrella=?,categoriaId=? WHERE id=?",
-            [$persona->getNombre(),$persona->getApellido(),$persona->getTelefono(),
-                $persona->getEstrella(),$persona->getCategoriaId(), $persona->getId()]
+            "UPDATE usuario SET identificador=?,nombre=?,apellidos=?,telefono=? WHERE id=?",
+            [$identificador,$nombre,$apellidos,$telefono,$id]
         );
 
         if ($filasAfectadas = null) return null;
-        else return $persona;
+        else return self::usuarioObtenerPorId($id);
+    }
+
+    public static function usuarioActualizarPasswd(string $passwd,int $id): ?Usuario
+    {
+        $filasAfectadas = self::ejecutarUpdate(
+            "UPDATE usuario SET contrasenna=? WHERE id=?",
+            [$passwd,$id]
+        );
+
+        if ($filasAfectadas = null) return null;
+        else return self::usuarioObtenerPorId($id);
     }
 
     public static function usuarioEliminarPorId(int $id): bool
@@ -290,8 +356,8 @@ class DAO
 
     private static function reservaCrearDesdeRs(array $fila): Reserva
     {
-        return new reserva($fila["id"], $fila["nombre"],$fila["apellidos"],
-            $fila["telefono"],$fila["estrella"],$fila["categoriaId"]);
+        return new Reserva($fila["rId"], $fila["rIdUser"],$fila["hNombre"], $fila["rFechaReserva"],$fila["rDireccion"],$fila["rCiudad"],
+            $fila["rCodPostal"],$fila["rPrecio"],$fila["rMonitor"],$fila["rHoraInicial"],$fila["rHoraFinal"]);
     }
 
     public static function reservaObtenerPorId(int $id): ?Reserva
@@ -303,6 +369,24 @@ class DAO
 
         if ($rs) return self::reservaCrearDesdeRs($rs[0]);
         else return null;
+    }
+
+
+    public static function reservaObtenerPorUsuario(int $id): array
+    {
+        $datos = [];
+        $rs = self::ejecutarConsulta(
+            "SELECT r.id as rId,r.id_user as rIdUser,h.nombre as hNombre,r.fecha_reserva as rFechaReserva,r.direccion as rDireccion,r.ciudad as rCiudad,
+                r.cod_postal as rCodPostal,r.precio as rPrecio,r.monitor as rMonitor,r.hora_inicio as rHoraInicial,r.hora_final as rHoraFinal
+ FROM reserva AS r INNER JOIN hinchable AS h ON r.id_Hinchable = h.id WHERE r.id_user=?",
+            [$id]
+        );
+
+        foreach ($rs as $fila) {
+            $reserva = self::reservaCrearDesdeRs($fila);
+            array_push($datos, $reserva);
+        }
+        return $datos;
     }
 
     public static function reservaObtenerTodas(): array
@@ -322,21 +406,21 @@ class DAO
         return $datos;
     }
 
-    public static function reservaCrear(string $nombre,string $apellidos, string $telefono,int $estrella,int $categoriaId): ?Reserva
+    public static function reservaCrear(string $idUsuario,string $idHinchable, string $fecha,string $direccion,string $ciudad,string $codPostal,float $precio,int $monitor,string $horaInicial,string $horaFinal): ?Reserva
     {
         $idAutogenerado = self::ejecutarInsert(
-            "INSERT INTO reserva (nombre) VALUES (?,?,?,?,?)",
-            [$nombre,$apellidos,$telefono,$estrella,$categoriaId]
+            "INSERT INTO reserva (id_user,id_hinchable,fecha_reserva,direccion,ciudad,cod_postal,precio,monitor,hora_inicio,hora_final) VALUES (?,?,?,?,?,?,?,?,?,?)",
+            [$idUsuario,$idHinchable,$fecha,$direccion,$ciudad,$codPostal,$precio,$monitor,$horaInicial,$horaFinal]
         );
 
         if ($idAutogenerado == null) return null;
-        else return self::reservaCrearDesdeRs($idAutogenerado);
+        else return self::reservaObtenerPorId($idAutogenerado);
     }
 
     public static function reservaActualizar(Reserva $reserva): ?Reserva
     {
         $filasAfectadas = self::ejecutarUpdate(
-            "UPDATE reserva SET nombre=?,apellidos=?,telefono=?,estrella=?,categoriaId=? WHERE id=?",
+            "UPDATE reserva SET idUsuario,idHinchable,fecha,direccion,ciudad,cod_postal,precio,monitor,hora_inicial,hora_final WHERE id=?",
             [$reserva->getNombre(),$reserva->getApellido(),$reserva->getTelefono(),
                 $reserva->getEstrella(),$reserva->getCategoriaId(), $reserva->getId()]
         );
