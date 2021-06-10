@@ -1,6 +1,6 @@
 window.onload = inicio;
 
-var usuId,usuNombre,usuApellidos,usuIdentificador,usuPassword,reservas,tablaReservas;
+var usuId,usuNombre,usuApellidos,usuIdentificador,usuPassword,reservas,tablaReservas,mostrarPass;
 
 function inicio(){
     usuId = document.getElementById("usuId");
@@ -16,13 +16,14 @@ function inicio(){
     document.getElementById("mostarReservas").addEventListener('click',mostrarReservas);
     reservas=document.getElementById("reservas");
     tablaReservas=document.getElementById("tablaReservas");
+    mostrarPass=document.getElementById("mostrarPass");
 }
 
 function mostrarCambioPass(){
     var parametros = {
         "id":usuId.value
     }
-    document.getElementById("mostrarPass").style.visibility="visible";
+    document.getElementById("mostarCambioPass").style.visibility="hidden";
     llamadaAjax("UsuarioObtenerDatos.php", objetoAParametrosParaRequest(parametros),
         function(xml) {
             // Se re-crean los datos por si han modificado/normalizado algún valor en el servidor.
@@ -40,7 +41,19 @@ function mostrarCambioPass(){
 function cargarPasswd(usuario){
     if(usuario.contrasenna != null){
         usuPassword.value=usuario.contrasenna;
+        mostrarPass.style.visibility="visible";
     }
+}
+
+function comprobarPassword(){
+
+    if(contrasenna.value.length > 8 && contrasenna.value.length < 16){
+        document.getElementById("guardarPass").style.visibility="visible";
+    }else{
+        alert("La contraseña debe tener al entre 8 y 16 caracteres.")
+        document.getElementById("guardarPass").style.visibility="hidden";
+    }
+
 }
 
 function guardarPasswd(){
@@ -58,6 +71,7 @@ function guardarPasswd(){
             }else{
                 alert("Contraseña cambiada");
                 document.getElementById("mostrarPass").style.visibility="hidden";
+                document.getElementById("mostarCambioPass").style.visibility="visible";
             }
 
         },
@@ -94,35 +108,25 @@ function cargarReservas(objeto){
     if(tamano !=0){
         for(var i=0;i<tamano;i++){
             var tr = document.createElement("tr");
-
             var tdNombre = document.createElement("td");
             var textoNombre = document.createTextNode(objeto[i].NombreHinchable);
-
             var tdFecha = document.createElement("td");
             var textoFecha = document.createTextNode(objeto[i].fecha);
-
             var tdDireccion = document.createElement("td");
             var textoDireccion = document.createTextNode(objeto[i].direccion);
-
             var tdCiudad = document.createElement("td");
             var textoCiudad = document.createTextNode(objeto[i].ciudad);
-
             var tdPrecio = document.createElement("td");
             var textoPrecio = document.createTextNode(objeto[i].precio + " €");
-
             var tdHoraInicial = document.createElement("td");
             var textoHoraInicial= document.createTextNode(objeto[i].horaInicial);
-
             var tdHoraFinal = document.createElement("td");
             var textoHoraFinal = document.createTextNode(objeto[i].horaFinal);
-
             var tdCancelar = document.createElement("td");
-            var botonCancelar = document.createElement("a");
+            var botonCancelar = document.createElement("button");
             botonCancelar.innerHTML= "Cancelar Reserva";
-            botonCancelar.setAttribute("href", "ReservasCancelar.php?id="+objeto[i].id);
+            botonCancelar.setAttribute("onclick", "cancelarReserva("+objeto[i].id+",this)");
             botonCancelar.setAttribute("class", "btnReserva");
-
-
 
             tdFecha.appendChild(textoFecha);
             tdNombre.appendChild(textoNombre);
@@ -148,6 +152,34 @@ function cargarReservas(objeto){
     }else{
         alert("No hay reservas para mostrar");
     }
+}
+
+function deleteRow(row){
+    var d = row.parentNode.parentNode.rowIndex;
+    document.getElementById('tablaReserva').deleteRow(d);
+}
+
+function cancelarReserva(id,i){
+    var parametros = {
+        "id":id
+    }
+    llamadaAjax("ReservasCancelar.php", objetoAParametrosParaRequest(parametros),
+        function(xml) {
+            // Se re-crean los datos por si han modificado/normalizado algún valor en el servidor.
+            var dev = JSON.parse(xml);
+
+            if(!dev){
+                alert("Fallo al borrar");
+            }else{
+                alert("Reserva eliminada");
+               deleteRow(i)
+            }
+
+        },
+        function(texto) {
+            alert("Error Ajax al crear: " + texto);
+        }
+    );
 }
 
 function edicionDatos(){

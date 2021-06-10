@@ -1,6 +1,7 @@
 <?php
 
 require_once "_com/Clases.php";
+require_once "_com/DAO.php";
 session_start();
 
 
@@ -87,17 +88,27 @@ function pintarCerrarSesion() {
 }
 
 
-function establecerSesionCookie(array $arrayUsuario)
+function establecerSesionCookie(Usuario $arrayUsuario)
 {
     // Creamos un código cookie muy complejo (no necesariamente único).
     $codigoCookie = generarCadenaAleatoria(32); // Random...
 
-    actualizarCodigoCookieEnBD($codigoCookie);
+    $comprobar = actualizarCodigoCookieEnBD($codigoCookie);
 
     // Enviamos al cliente, en forma de cookies, el identificador y el codigoCookie:
-    setcookie("identificador", $arrayUsuario["identificador"], time() + 600);
-    setcookie("codigoCookie", $codigoCookie, time() + 600);
+
+        setcookie("identificador", $arrayUsuario->getIdentificador(), time() + 600);
+        setcookie("codigoCookie", $codigoCookie, time() + 600);
+
 }
+
+function actualizarCodigoCookieEnBD(?string $codigoCookie)
+{
+    DAO::usuarioActualizarCodigoCookie($codigoCookie,$_SESSION["id"]); // TODO Comprobar si va bien con null.
+
+}
+
+
 
 function destruirSesionRamYCookie()
 {

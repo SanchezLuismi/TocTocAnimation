@@ -45,7 +45,7 @@ require_once "_com/Varios.php";
                         <div class="collapse navbar-collapse" id="navbarsExample04">
                            <ul class="navbar-nav mr-auto">
                               <li class="nav-item">
-                                 <a class="nav-link" href="index.php">Home</a>
+                                 <a class="nav-link" href="index.php">Inicio</a>
                               </li>
                               <li class="nav-item">
                                  <a class="nav-link" href="Reservas.php"> Catálogo  </a>
@@ -54,7 +54,7 @@ require_once "_com/Varios.php";
                                  <a class="nav-link" href="Contacto.php"> Contacto</a>
                               </li>
                               <li class="nav-item">
-                                 <a class="nav-link" href="Carrusel.php">Carrusel de imagenes</a>
+                                 <a class="nav-link" href="Carrusel.php">Carrusel de imágenes</a>
                               </li>
                               <li class="nav-item">
                                   <?php pintarInfoSesion(); ?>

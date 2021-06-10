@@ -6,11 +6,6 @@ function inicio(){
     idHinchable = document.getElementById("idHinchable");
     tablaHinchable = document.getElementById("tablaHinchable");
     cargarHinchable(idHinchable);
-    /* Control de boton Reserva (enable/disable) con campos
-    * No se puede entrar sino esta logeado
-    * Falta:
-    *  cambio de contraseña
-    *  hinchables por parametros*/
 }
 
 function cargarHinchable(idHinchable){
@@ -81,6 +76,33 @@ function mostrarDatosHinchable(datos){
     tablaHinchable.appendChild(tr);
 }
 
+function comprobarFecha(){
+    var idHinchable = document.getElementById("idHinchable").value
+    var fecha= document.getElementById("fecha").value
+    var parametros={
+        "id": idHinchable,
+        "fecha" : fecha
+    }
+
+    llamadaAjax("HinchableObtenerPorId.php?comprobarFecha", objetoAParametrosParaRequest(parametros),
+        function(xml) {
+            // Se re-crean los datos por si han modificado/normalizado algún valor en el servidor.
+            var datos = JSON.parse(xml);
+            var fecha= document.getElementById("fecha");
+
+            // Se fuerza la ordenación, ya que este elemento podría no quedar ordenado si se pone al final.
+            if(datos == 1){
+                alert("Día de reserva no valido");
+                fecha.value="";
+            }
+        },
+        function(texto) {
+            alert("Error Ajax al crear: " + texto);
+        }
+    );
+
+}
+
 function cargarPrecio(){
     var precio = document.getElementById("precio")
     var monitor= document.getElementById("monitor")
@@ -101,10 +123,15 @@ function calcularHora(){
     var control= document.getElementById("control")
 
     if(monitor.checked){
-        horaFinal.value=horaInicial;
+        var split=horaInicial.split(":");
+        var horaF=parseInt(split[0])+4 + ":" + split[1];
+
+        horaFinal.value=horaF;
     }else{
-        precio.value=precioCompleto + " €"
-        control.value="N";
+        var split=horaInicial.split(":");
+        var horaF=parseInt(split[0])+8 + ":" + split[1];
+
+        horaFinal.value=horaF;
     }
 
 }

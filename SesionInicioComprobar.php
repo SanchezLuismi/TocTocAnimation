@@ -6,7 +6,7 @@ require_once "_com/DAO.php";
 
 $arrayUsuario = DAO::usuarioObtenerPorIdentificadoryPassword($_REQUEST["identificador"], $_REQUEST["contrasenna"]);
 
-if ($arrayUsuario->getId()) { // Identificador existía y contraseña era correcta.
+if ($arrayUsuario   !=null) { // Identificador existía y contraseña era correcta.
     establecerSesionRam($arrayUsuario);
 
     if (isset($_REQUEST["recordar"])) {

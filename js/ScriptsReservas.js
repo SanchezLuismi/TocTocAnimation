@@ -111,7 +111,6 @@ function cargaReserva(objeto){
     if(tamano !=0){
         for(var i=0;i<tamano;i++){
             var tr = document.createElement("tr");
-
             var tdImagen = document.createElement("td");
             var imagen = document.createElement("img");
             imagen.setAttribute("src","img/hinch"+objeto[i].id+".jpg");
@@ -121,40 +120,27 @@ function cargaReserva(objeto){
             var imgReserva = document.createElement("a");
             imgReserva.setAttribute("href", "img/hinch"+objeto[i].id+".jpg");
             imgReserva.setAttribute("data-lightbox", "smile");
-
             var tdNombre = document.createElement("td");
             var textoNombre = document.createTextNode(objeto[i].nombre);
-
             var tdDimensiones = document.createElement("td");
             var textoDimensiones = document.createTextNode(objeto[i].dimensiones);
-
             var tdTipo = document.createElement("td");
             var textoTipo = document.createTextNode(objeto[i].tipo);
-
             var tdPrecio1 = document.createElement("td");
             var textoPrecio1 = document.createTextNode(objeto[i].precio1 + " €");
-
             var tdPrecio2 = document.createElement("td");
             if(objeto[i].precio2 == 0){
                 var textoPrecio2 = document.createTextNode("Solo con monitor");
             }else{
                 var textoPrecio2 = document.createTextNode(objeto[i].precio2 + " €");
             }
-
-
-            /*var selectTipo = document.createElement("select");
-            cargarTipos(selectTipo);
-            cargarSelectTabla(selectTipo,objeto[i].tipo)*/
-
             var tdDescripcion = document.createElement("td");
             var textoDescripcion = document.createTextNode(objeto[i].descripcion);
-
             var tdReserva = document.createElement("td");
             var botonReserva = document.createElement("a");
             botonReserva.innerHTML= "Reserva";
             botonReserva.setAttribute("href", "ReservaInicial.php?idHinchable="+objeto[i].id);
             botonReserva.setAttribute("class", "btnReserva");
-
             imgReserva.appendChild(imagen);
             tdImagen.appendChild(imgReserva);
             tdNombre.appendChild(textoNombre);
@@ -164,7 +150,6 @@ function cargaReserva(objeto){
             tdPrecio1.appendChild(textoPrecio1);
             tdPrecio2.appendChild(textoPrecio2);
             tdReserva.appendChild(botonReserva);
-
             tr.appendChild(tdImagen);
             tr.appendChild(tdNombre);
             tr.appendChild(tdDimensiones);
@@ -176,7 +161,6 @@ function cargaReserva(objeto){
             tablaReserva.appendChild(tr);
 
         }
-        //divReserva.style.visibility="visible";
         busqueda++;
     }else{
         alert("No hay datos para mostrar");

@@ -2,6 +2,7 @@
     require_once "_com/Varios.php";
 
     if (haySesionRamIniciada()) redireccionar("index.php");
+
     $reserva = isset($_REQUEST["Reserva"]);
     $datosErroneos = isset($_REQUEST["datosErroneos"]);
     if($reserva){
@@ -53,7 +54,7 @@
                         <div class="collapse navbar-collapse" id="navbarsExample04">
                             <ul class="navbar-nav mr-auto">
                                 <li class="nav-item">
-                                    <a class="nav-link" href="index.php">Home</a>
+                                    <a class="nav-link" href="index.php">Inicio</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" href="Reservas.php"> Catálogo  </a>
@@ -62,7 +63,7 @@
                                     <a class="nav-link" href="Contacto.php"> Contacto</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="Carrusel.php">Carrusel de imagenes</a>
+                                    <a class="nav-link" href="Carrusel.php">Carrusel de imágenes</a>
                                 </li>
                                 <li class="nav-item active">
                                     <?php pintarInfoSesion(); ?>
@@ -95,6 +96,9 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="web_hosting">
+                    <?php if ($datosErroneos) { ?>
+                        <p style='color: red;'>No se ha podido iniciar sesión con los datos proporcionados. Inténtelo de nuevo.</p>
+                    <?php } ?>
                     <form action="<?=$form?>" method="post">
                         <label for='identificador'>Identificador</label>
                         <input type='text' name='identificador' required><br><br>

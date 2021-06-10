@@ -51,7 +51,7 @@ $telefono = $_SESSION["telefono"];
                         <div class="collapse navbar-collapse" id="navbarsExample04">
                             <ul class="navbar-nav mr-auto">
                                 <li class="nav-item">
-                                    <a class="nav-link" href="index.php">Home</a>
+                                    <a class="nav-link" href="index.php">Inicio</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" href="Reservas.php"> Catálogo  </a>
@@ -60,7 +60,7 @@ $telefono = $_SESSION["telefono"];
                                     <a class="nav-link" href="Contacto.php"> Contacto</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="Carrusel.php">Carrusel de imagenes</a>
+                                    <a class="nav-link" href="Carrusel.php">Carrusel de imágenes</a>
                                 </li>
                                 <li class="nav-item">
                                     <?php pintarInfoSesion(); ?>
@@ -109,7 +109,7 @@ $telefono = $_SESSION["telefono"];
                         <input type="Radio" name="opciones" id="completo" value="completo" onchange="cargarPrecio()"> Día completo sin monitor
                         <br />
                         Precio: <input type="text" id="precio" name ="precio" readonly required><br />
-                        Fecha: <input type="date" id='fecha' name="fecha" required/>
+                        Fecha: <input type="date" id='fecha' name="fecha" required onchange="comprobarFecha()"/>
                         Hora inicio: <input type="time" name="horaInicial" id='horaInicial' onchange="calcularHora()" required/>
                         Hora final: <input type="time" name="horaFinal" id='horaFinal'/>
                         <br />

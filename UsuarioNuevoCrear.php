@@ -1,7 +1,7 @@
 <?php
 
 require_once "_com/Varios.php";
-
+$datosErroneos = isset($_REQUEST["datosErroneos"]);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -22,6 +22,7 @@ require_once "_com/Varios.php";
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css" media="screen">
     <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <script src="js/ScriptsCreacionUsuario.js"></script>
 </head>
 <body class="main-layout">
 <header>
@@ -45,7 +46,7 @@ require_once "_com/Varios.php";
                         <div class="collapse navbar-collapse" id="navbarsExample04">
                             <ul class="navbar-nav mr-auto">
                                 <li class="nav-item">
-                                    <a class="nav-link" href="index.php">Home</a>
+                                    <a class="nav-link" href="index.php">Inicio</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" href="Reservas.php"> Catálogo  </a>
@@ -54,7 +55,7 @@ require_once "_com/Varios.php";
                                     <a class="nav-link" href="Contacto.php"> Contacto</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="Carrusel.php">Carrusel de imagenes</a>
+                                    <a class="nav-link" href="Carrusel.php">Carrusel de imágenes</a>
                                 </li>
                                 <li class="nav-item">
                                     <?php pintarInfoSesion(); ?>
@@ -82,18 +83,21 @@ require_once "_com/Varios.php";
         <div class="row">
             <div class="col-md-12">
                 <div class="web_hosting">
+                    <?php if ($datosErroneos) { ?>
+                        <p style='color: red;'>No se ha podido crear el usuario con los datos proporcionados. Inténtelo de nuevo.</p>
+                    <?php } ?>
                     <form action='UsuarioGuardar.php' method='post'>
                         <label>Nombre:</label>
                         <input type='text' name='nombre' required><br><br>
                         <label>Apellidos: </strong></label>
-                        <input type='text' name='apellidos' required><br><br>
+                        <input type='text' name='apellidos' required ><br><br>
                         <label>Teléfono: </label>
                         <input type='text' name='telefono' required/><br><br>
                         <label>Usuario: </label>
                         <input type='text' name='identificador' required/><br><br>
                         <label>Contraseña:</label>
-                        <input type='password' name='contrasenna' required/><br><br>
-                        <input type='submit' name='boton' value="Enviar" />
+                        <input type='password' name='contrasenna' id="contrasenna" required onchange="comprobarPassword()"/><br><br>
+                        <input type='submit' name='boton' value="Enviar" id="btnEnviar" style="visibility: hidden"/>
                     </form>
                 </div>
             </div>

@@ -53,7 +53,7 @@ $telefono=$_SESSION["telefono"] ;
                         <div class="collapse navbar-collapse" id="navbarsExample04">
                             <ul class="navbar-nav mr-auto">
                                 <li class="nav-item">
-                                    <a class="nav-link" href="index.php">Home</a>
+                                    <a class="nav-link" href="index.php">Inicio</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" href="Reservas.php"> Catálogo  </a>
@@ -62,7 +62,7 @@ $telefono=$_SESSION["telefono"] ;
                                     <a class="nav-link" href="Contacto.php"> Contacto</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="Carrusel.php">Carrusel de imagenes</a>
+                                    <a class="nav-link" href="Carrusel.php">Carrusel de imágenes</a>
                                 </li>
                                 <li class="nav-item">
                                     <?php pintarInfoSesion(); ?>
@@ -97,12 +97,12 @@ $telefono=$_SESSION["telefono"] ;
                     <h4>Teléfono: <input type="text" id="usuTelefono" value="<?= $telefono ?>"readonly></h4><br />
                     <button id="cambioDatos">Editar mis datos</button><br />
                     <button id="guardarDatos" class="divReserva">Guardar datos</button><br /> <br />
-                    <button id="mostarCambioPass">Cambiar Contraseña</button><br />
+                    <button id="mostarCambioPass">Cambiar contraseña</button><br />
                     <div id="mostrarPass" class="divReserva">
-                        <h4>Contraseña:  <input type="text" id="usuPassword"></h4><br />
-                        <button id="guardarPass">Guardar Contraseña</button>
+                        <h4>Contraseña:  <input type="text" id="usuPassword" onchange="comprobarPassword()"></h4><br />
+                        <button id="guardarPass">Guardar contraseña</button>
                     </div>
-                    <h6><button id="mostarReservas">Mostrar mis Reservas</button></h6>
+                    <h6><button id="mostarReservas">Mostrar mis reservas</button></h6>
                     <div id="reservas" class="divReserva">
                         <table id="tablaReservas" class="tablaReserva" border="1">
                             <tr>

@@ -40,6 +40,16 @@ if(isset($_REQUEST["GuardarPass"])){
     $telefono = $_REQUEST["telefono"];
     $identificador = $_REQUEST["identificador"];
     $contrasenna = $_REQUEST["contrasenna"];
+
+    $comprobacion = DAO::usuarioObtenerPorIdentificador($identificador);
+
+    if($comprobacion == 0){
+        DAO::usuarioCrear($nombre, $apellidos, $identificador, $contrasenna);
+        redireccionar("SesionInicioMostrarFormulario.php");
+    }else{
+        redireccionar("UsuarioNuevoCrear.php?datosErroneos");
+    }
+
     if (isset($_REQUEST["nombre"])        && isset($_REQUEST["apellidos"]) &&
         isset($_REQUEST["identificador"]) && isset($_REQUEST["contrasenna"])){
         //validamos si los campos introducidos son vacíos o no (se debe hacer una validación mejor)
@@ -63,8 +73,7 @@ if(isset($_REQUEST["GuardarPass"])){
         } else {
             $contrasenna=$_REQUEST["contrasenna"];
         }
-        DAO::usuarioCrear($nombre, $apellidos, $identificador, $contrasenna);
-        redireccionar("SesionInicioMostrarFormulario.php");
+
     } else {
         redireccionar("UsuarioNuevoCrear.php");
     }

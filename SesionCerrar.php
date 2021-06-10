@@ -1,9 +1,8 @@
 <?php
 
     require_once "_com/Varios.php";
-    require_once "_com/DAO.php";
 
-    DAO::destruirSesionRamYCookie();
+    destruirSesionRamYCookie();
 
     redireccionar("index.php");
 

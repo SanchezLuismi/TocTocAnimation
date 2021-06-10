@@ -82,14 +82,6 @@ class DAO
         else return $delete->rowCount();
     }
 
-    public function destruirSesionRamYCookie()
-    {
-        session_destroy();
-        setcookie('codigoCookie', "");
-        setcookie('identificador',"");
-        unset($_SESSION);
-    }
-
 
     /* HINCHABLE */
 
@@ -304,7 +296,29 @@ class DAO
         else return null;
     }
 
-    public static function usuarioCrear(string $identificador,string $password,string $nombre,string $apellidos, string $telefono): ?Usuario
+    public static function usuarioObtenerPorIdentificador(string $identificador): int
+    {
+        $rs = self::ejecutarConsulta(
+            "SELECT * FROM usuario WHERE identificador=?",
+            [$identificador]
+        );
+
+        if ($rs) return 1;
+        else return 0;
+    }
+
+    function obtenerUsuarioPorCodigoCookie(string $identificador, string $codigoCookie): ?Usuario
+    {
+        $rs = self::ejecutarConsulta(
+            "SELECT * FROM usuario WHERE identificador=? AND BINARY codigoCookie=?",
+            [$identificador, $codigoCookie]
+        );
+        if ($rs) return self::usuarioCrearDesdeRs($rs[0]);
+        else return null;
+    }
+
+
+        public static function usuarioCrear(string $identificador,string $password,string $nombre,string $apellidos, string $telefono): ?Usuario
     {
         $idAutogenerado = self::ejecutarInsert(
             "INSERT INTO usuario (identificador,contrasenna,codigoCookie,caducidadCodigoCookie,nombre,apellidos,telefono) VALUES (?,?,?,?,?,?,?)",
@@ -337,6 +351,15 @@ class DAO
         else return self::usuarioObtenerPorId($id);
     }
 
+    public static function usuarioActualizarCodigoCookie(?string $codigoCookie,int $id)
+    {
+        $filasAfectadas = self::ejecutarUpdate(
+            "UPDATE Usuario SET codigoCookie=? WHERE id=?",
+            [$codigoCookie,$id]
+        );
+
+    }
+
     public static function usuarioEliminarPorId(int $id): bool
     {
         $filasAfectadas = self::ejecutarUpdate(
@@ -354,10 +377,16 @@ class DAO
 
     /* RESERVAS */
 
-    private static function reservaCrearDesdeRs(array $fila): Reserva
+    private static function reservaCrearDesdeRsConcatenado(array $fila): Reserva
     {
         return new Reserva($fila["rId"], $fila["rIdUser"],$fila["hNombre"], $fila["rFechaReserva"],$fila["rDireccion"],$fila["rCiudad"],
             $fila["rCodPostal"],$fila["rPrecio"],$fila["rMonitor"],$fila["rHoraInicial"],$fila["rHoraFinal"]);
+    }
+
+    private static function reservaCrearDesdeRs(array $fila): Reserva
+    {
+        return new Reserva($fila["id"], $fila["id_user"],$fila["id_hinchable"], $fila["fecha_reserva"],$fila["direccion"],$fila["ciudad"],
+            $fila["cod_postal"],$fila["precio"],$fila["monitor"],$fila["hora_inicio"],$fila["hora_final"]);
     }
 
     public static function reservaObtenerPorId(int $id): ?Reserva
@@ -372,7 +401,7 @@ class DAO
     }
 
 
-    public static function reservaObtenerPorUsuario(int $id): array
+    public static function reservaObtenerPorUsuario($id): array
     {
         $datos = [];
         $rs = self::ejecutarConsulta(
@@ -383,7 +412,7 @@ class DAO
         );
 
         foreach ($rs as $fila) {
-            $reserva = self::reservaCrearDesdeRs($fila);
+            $reserva = self::reservaCrearDesdeRsConcatenado($fila);
             array_push($datos, $reserva);
         }
         return $datos;
@@ -406,7 +435,7 @@ class DAO
         return $datos;
     }
 
-    public static function reservaCrear(string $idUsuario,string $idHinchable, string $fecha,string $direccion,string $ciudad,string $codPostal,float $precio,int $monitor,string $horaInicial,string $horaFinal): ?Reserva
+    public static function reservaCrear($idUsuario,$idHinchable, $fecha,$direccion,$ciudad,$codPostal,$precio,$monitor,$horaInicial,$horaFinal): ?Reserva
     {
         $idAutogenerado = self::ejecutarInsert(
             "INSERT INTO reserva (id_user,id_hinchable,fecha_reserva,direccion,ciudad,cod_postal,precio,monitor,hora_inicio,hora_final) VALUES (?,?,?,?,?,?,?,?,?,?)",
@@ -415,6 +444,17 @@ class DAO
 
         if ($idAutogenerado == null) return null;
         else return self::reservaObtenerPorId($idAutogenerado);
+    }
+
+    public static function hinchableObtenerPorIdFecha(int $id,string $fecha): int
+    {
+        $rs = self::ejecutarConsulta(
+            "SELECT * FROM reserva where id=? and fecha_reserva=?",
+            [$id,$fecha]
+        );
+
+        if ($rs) return 1;
+        else return 0;
     }
 
     public static function reservaActualizar(Reserva $reserva): ?Reserva

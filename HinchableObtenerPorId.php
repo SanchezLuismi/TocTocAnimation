@@ -4,6 +4,14 @@ require_once "_com/DAO.php";
 
 $idHinchable = $_REQUEST["id"];
 
-$hinchable = DAO::hinchableObtenerPorId($idHinchable);
+if(isset($_REQUEST["comprobarFecha"])){
+    $fecha=$_REQUEST["fecha"];
 
-echo json_encode($hinchable);
+    $boolean=DAO::hinchableObtenerPorIdFecha($idHinchable,$fecha);
+    echo json_encode($boolean);
+
+}else{
+    $hinchable = DAO::hinchableObtenerPorId($idHinchable);
+    echo json_encode($hinchable);
+}
+

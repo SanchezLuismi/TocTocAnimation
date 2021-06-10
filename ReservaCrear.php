@@ -26,7 +26,6 @@ if($_REQUEST["monitor"] == "S"){
 
 // TODO Esto es la v1.0:
 $hinchables = DAO::reservaCrear($idUsuario,$idHinchable,$fecha,$direccion,$localidad,$codPostal,$precio,$monitor,$horaInicial,$horaFinal);
-//$hinchables = DAO::reservaCrear(1,16,"2021-06-03","Calle Zorzales 19a 3b","Aranjuez","28300",150 ,1,"10:00","14:00");
 
 if($hinchables){
     redireccionar("index.php");
@@ -34,6 +33,5 @@ if($hinchables){
     redireccionar("ReservaFinal.php?Error");
 }
 
-//echo json_encode($hinchables);
 
 
