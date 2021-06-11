@@ -354,7 +354,7 @@ class DAO
     public static function usuarioActualizarCodigoCookie(?string $codigoCookie,int $id)
     {
         $filasAfectadas = self::ejecutarUpdate(
-            "UPDATE Usuario SET codigoCookie=? WHERE id=?",
+            "UPDATE usuario SET codigoCookie=? WHERE id=?",
             [$codigoCookie,$id]
         );
 
@@ -363,7 +363,7 @@ class DAO
     public static function usuarioEliminarPorId(int $id): bool
     {
         $filasAfectadas = self::ejecutarUpdate(
-            "DELETE FROM Usuario WHERE id=?",
+            "DELETE FROM usuario WHERE id=?",
             [$id]
         );
 
