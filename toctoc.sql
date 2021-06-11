@@ -20,7 +20,8 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `toctoc`
 --
-
+CREATE DATABASE IF NOT EXISTS `TocToc` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE `TocToc`;
 -- --------------------------------------------------------
 
 --
@@ -79,7 +80,6 @@ CREATE TABLE `reserva` (
 
 INSERT INTO `reserva` (`id`, `id_user`, `id_hinchable`, `fecha_reserva`, `direccion`, `ciudad`, `cod_postal`, `precio`, `monitor`, `hora_inicio`, `hora_final`) VALUES
 (32, 1, 16, '2021-06-11', 'Calle Zorzales 19a 3b', 'Aranjuez', '28300', 150, 1, '10:28', '14:28'),
-(33, 2, 16, '2021-06-11', 'Calle Zorzales 19a 3b', 'Aranjuez', '28300', 150, 1, '16:30', '20:30');
 
 -- --------------------------------------------------------
 
@@ -122,7 +122,7 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`id`, `identificador`, `contrasenna`, `codigoCookie`, `caducidadCodigoCookie`, `nombre`, `apellidos`, `telefono`) VALUES
-(1, 'jlopez', 'luismi12345', NULL, NULL, 'José', 'López', '098765431'),
+(1, 'jlopez', 'jlopez123', NULL, NULL, 'José', 'López', '098765431'),
 (2, 'mgarcia', 'm', NULL, NULL, 'María', 'García', '987654321'),
 (3, 'fpi', 'f', NULL, NULL, 'Felipe', 'Pi', '123456789');
 
